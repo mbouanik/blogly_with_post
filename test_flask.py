@@ -1,3 +1,4 @@
+from os import fork
 from unittest import TestCase
 from app import create_app
 from models import User, Post, db
@@ -85,3 +86,75 @@ class TestFlaskApp(TestCase):
 
         self.assertEqual(res.status_code, 200)
         self.assertNotIn("John", html)
+
+
+class TestPostView(TestCase):
+    def setUp(self) -> None:
+        with app.app_context():
+            user = User(first_name="John", last_name="Doe")
+            db.session.add(user)
+            db.session.commit()
+
+            post = Post(
+                title="The Force",
+                content="Willpower is the key for...",
+                user_id=user.id,
+            )
+            db.session.add(post)
+            db.session.commit()
+            self.client = app.test_client()
+            self.user = user
+            self.user_id = user.id
+            self.post_id = post.id
+
+    def tearDown(self):
+        with app.app_context():
+            db.session.rollback()
+
+    def test_post_list(self):
+        res = self.client.get(f"/users/{self.user_id}")
+        html = res.get_data(as_text=True)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertIn("The Force", html)
+
+    def test_post(self):
+        res = self.client.get(f"/posts/{self.post_id}")
+        html = res.get_data(as_text=True)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertIn("Willpower ", html)
+
+    def test_new_post(self):
+        data = {"title": "The Strength", "content": "The mental toll on..."}
+        res = self.client.post(
+            f"/users/{self.user_id}/posts/new", data=data, follow_redirects=True
+        )
+        html = res.get_data(as_text=True)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertIn("The Strength", html)
+        self.assertIn("The Force", html)
+
+    def test_edit_post(self):
+        data = {
+            "title": "The Last Moon",
+            "content": "The moon was on its last rotation...",
+        }
+
+        res = self.client.post(
+            f"/posts/{self.post_id}/edit", data=data, follow_redirects=True
+        )
+        html = res.get_data(as_text=True)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertIn("The Last Moon", html)
+        self.assertIn("The moon was ", html)
+
+    def test_delete_post(self):
+        res = self.client.get(f"/posts/{self.post_id}/delete", follow_redirects=True)
+        html = res.get_data(as_text=True)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertNotIn("The Force", html)
+        self.assertNotIn("Willpower ", html)
