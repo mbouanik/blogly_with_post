@@ -18,11 +18,16 @@ with app.app_context():
 
 class TestFlaskApp(TestCase):
     def setUp(self) -> None:
-        user = User(first_name="John", last_name="Doe")
-        post = Post(title="The Force", content="Willpower is the key for...", user_id=1)
         with app.app_context():
+            user = User(first_name="John", last_name="Doe")
             db.session.add(user)
             db.session.commit()
+
+            post = Post(
+                title="The Force",
+                content="Willpower is the key for...",
+                user_id=user.id,
+            )
             db.session.add(post)
             db.session.commit()
             self.client = app.test_client()
@@ -74,9 +79,9 @@ class TestFlaskApp(TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertIn("Zork Doe", html)
 
-    # def test_delete_user(self):
-    #     res = self.client.get(f"/users/{self.user.id}/delete", follow_redirects=True)
-    #     html = res.get_data(as_text=True)
-    #
-    #     self.assertEqual(res.status_code, 200)
-    #     self.assertNotIn("John", html)
+    def test_delete_user(self):
+        res = self.client.get(f"/users/{self.user.id}/delete", follow_redirects=True)
+        html = res.get_data(as_text=True)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertNotIn("John", html)

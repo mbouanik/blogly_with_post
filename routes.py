@@ -11,7 +11,9 @@ def home():
 
 @app_routes.route("/users")
 def show_users():
-    users = db.session.execute(db.select(User)).scalars()
+    users = db.session.execute(
+        db.select(User).order_by(User.first_name, User.last_name)
+    ).scalars()
     return render_template("home.html", users=users)
 
 
