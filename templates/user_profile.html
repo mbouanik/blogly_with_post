@@ -18,12 +18,12 @@
 
         {% for post in user.posts %}
             <li>
-                <a href="">{{post.title}} </a>
+            <a href="/posts/{{post.id}}">{{post.title}} </a>
             </li>
             {% endfor %}
         </ul>
         <div class='post-btn'>
-            <a href="/add-new-post"> Add New Post</a>
+            <a href="/users/{{user.id}}/posts/new"> Add New Post</a>
         </div>
     </div>
 </div>
