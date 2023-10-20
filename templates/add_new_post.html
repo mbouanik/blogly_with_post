@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block title %} New Post {% endblock %} {% block
 content %}
 <h1>Create New Post</h1>
-<form action="/users/{{user_id}}/post/new" method="post">
+<form action="/users/{{user_id}}/posts/new" method="post">
   <input type="text" name="title" placeholder="Title" />
     <div>
         <textarea rows="25" cols="100" name="content" placeholder="Enter your Text">

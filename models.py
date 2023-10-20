@@ -15,7 +15,7 @@ class Post(db.Model):
     title: Mapped[str] = mapped_column(String, nullable=False)
     content: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[DateTime] = mapped_column(DateTime, nullable=False, default=datetime.today())
-    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
 
     def __init__(self, **kwargs) -> None:
         super(Post, self).__init__(**kwargs)
@@ -32,7 +32,7 @@ class User(db.Model):
     last_name: Mapped[str] = mapped_column(String, nullable=False)
     image_url: Mapped[Optional[str]] = mapped_column(String, default=DEFAULT_IMG)
 
-    posts: Mapped[Post] = Relationship("Post", backref="users", cascade="all, delete")
+    posts: Mapped[Post] = Relationship("Post", backref="user", cascade="all, delete")
 
     @property
     def full_name(self):

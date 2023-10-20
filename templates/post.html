@@ -5,10 +5,10 @@
 <div>
     {{post.content}}
 </div>
-<p>By {{post.users.full_name}}</p>
+<p>By {{post.user.full_name}}</p>
 <div class='btn'>
     <div class='edit'>
-        <a href='/users/{{post.users.id}}' >Cancel </a>
+        <a href='/users/{{post.user.id}}' >Cancel </a>
     </div>
 
     <div class='edit'>

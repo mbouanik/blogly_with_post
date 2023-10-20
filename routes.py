@@ -101,7 +101,7 @@ def edit_post(post_id):
 @app_routes.route("/posts/<post_id>/delete")
 def delete_post(post_id):
     post = db.session.execute(db.select(Post).filter_by(id=post_id)).scalar_one()
-    user_id = post.users.id
+    user_id = post.user.id
     db.session.delete(post)
     db.session.commit()
     return redirect(f"/users/{user_id}")
