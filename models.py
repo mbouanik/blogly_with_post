@@ -1,12 +1,12 @@
 from typing import Optional
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Date, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
+from init import db
 from sqlalchemy.orm import Mapped, Relationship, mapped_column
 from datetime import datetime
 
-db = SQLAlchemy()
-DEFAULT_IMG = "https://wallpapercave.com/wp/wp12696574.jpg"
 
+DEFAULT_IMG = "https://wallpapercave.com/wp/wp12696574.jpg"
+   
 
 class Post(db.Model):
     __tablename__ = "posts"
@@ -14,9 +14,7 @@ class Post(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[str] = mapped_column(String, nullable=False)
     content: Mapped[str] = mapped_column(Text, nullable=False)
-    created_at: Mapped[Date] = mapped_column(
-        DateTime, nullable=False, default=datetime.utcnow()
-    )
+    created_at: Mapped[DateTime] = mapped_column(DateTime, nullable=False, default=datetime.today())
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
 
     def __init__(self, **kwargs) -> None:

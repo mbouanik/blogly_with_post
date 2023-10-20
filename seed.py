@@ -1,5 +1,6 @@
 from app import app
-from models import db, User, Post
+from init import db
+from models import User, Post
 
 with app.app_context():
     db.drop_all()

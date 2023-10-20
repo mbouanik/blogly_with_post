@@ -1,7 +1,8 @@
 from flask import Blueprint, redirect, render_template, request
-from models import Post, db, User
+from init import db
+from models import Post, User
 
-app_routes = Blueprint("app_routes", __name__)
+app_routes = Blueprint("app_routes", __name__, static_folder='static', static_url_path='/app_routs/static', template_folder='templates')
 
 
 @app_routes.route("/")
