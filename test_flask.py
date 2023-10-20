@@ -1,6 +1,6 @@
 from unittest import TestCase
-from app import create_app
-from models import User, Post, db
+from init import create_app, db
+from models import User, Post
 
 
 app = create_app()
